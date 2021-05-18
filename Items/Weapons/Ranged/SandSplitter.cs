@@ -1,4 +1,10 @@
-public class SandSplitter : ModItem //For autoloading texture, name sprite file "SandSplitter." Else, ask me about overriding textures.
+using Terraria;
+using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+
+namespace Overworld.Items.Weapons.Ranged
+{
+    public class SandSplitter : ModItem //For autoloading texture, name sprite file "SandSplitter." Else, ask me about overriding textures.
     {
         public override void SetDefaults()
         {
@@ -55,3 +61,4 @@ public class SandSplitter : ModItem //For autoloading texture, name sprite file 
             }
         }
     }
+}
