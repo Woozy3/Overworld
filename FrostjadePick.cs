@@ -3,25 +3,26 @@ using Terraria.ModLoader;
 
 namespace Overworld.Items
 {
-    public class Bonebreaker : ModItem
+    public class FrostjadePick : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bone breaker");
-            Tooltip.SetDefault("Crushes even rockens to dust");
+            DisplayName.SetDefault("Frostjade Pickaxe");
+            Tooltip.SetDefault("");
         }
         public override void SetDefaults()
         {
-            item.damage = 30;
+            item.damage = 15;
             item.melee = true;
-            item.width = 58;
-            item.height = 70;
-            item.useTime = 50;
-            item.useAnimation = 20;
-            item.useStyle = 1;
-            item.knockBack = 10;
+            item.width = 40;
+            item.height = 40;
+            item.useTime = 18;
+            item.useAnimation = 10;
+            item.pick = 45;
+            item.useStyle = ItemUseStyleID.SwingThrow;
+            item.knockBack = 6;
             item.value = 10000;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.UseSound = SoundID.Item1;
             item.autoReuse = true;
         }
