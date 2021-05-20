@@ -32,7 +32,7 @@ namespace Overworld.Projectiles.Minions
 		#endregion
 		public override void Behavior()
 		{
-			ModifyRotation(AiState); //The way this is called ensures that it does not actually interfere with the default AI.
+			bool defaultRotation = ModifyRotation(AiState); //The way this is called ensures that it does not actually interfere with the default AI.
 			Player player = Main.player[projectile.owner]; //projectile's owner.
 			bool hasTarget = false;
 			targetPos = player.position; //Vector2 to aim for
@@ -79,7 +79,8 @@ namespace Overworld.Projectiles.Minions
 
 				if (AiState == 0) //idle
 				{
-					projectile.rotation = 0;
+					if(defaultRotation) //If the minion doesn't handle rotation
+						projectile.rotation = 0; //set rotation to 0
 					if(projectile.Distance(player.position) <= followDistance && projectile.Distance(player.position) > 128f) //if the projectile is a distance away from the player
 					{
 						projectile.velocity = (projectile.DirectionTo(player.position) * maxSpeed) * (1 + accellerationMult*0.6f); //change the velocity towards the player
@@ -95,7 +96,8 @@ namespace Overworld.Projectiles.Minions
 				{
 					if (projectile.velocity == Vector2.Zero) //just so there's no non-moving projectiles.
 						projectile.velocity.Y = -1f; //set y-vel to -1
-					projectile.rotation = 0;
+					if(defaultRotation) //If the minion doesn't handle rotation
+						projectile.rotation = 0; //set rotation to 0
 					if (Vector2.Distance(projectile.position, targetPos) > hoverRadius*0.9f) //if the distance is greater than the hoverRadius
 					{
 						projectile.velocity += (Vector2.Normalize(targetPos - projectile.position) * maxSpeed) * (1 + accellerationMult); //add velocity towards the target position
@@ -131,17 +133,19 @@ namespace Overworld.Projectiles.Minions
 				if (dashCounter <= 0f) //when the counter runs out (<= 0)
 					AiState = 1; //set ai state to attacking
 				dashCounter -= 1f; //subtract from dash counter, so it can properly reset ai state
-				projectile.rotation = projectile.velocity.ToRotation()+MathHelper.PiOver2; //rotation. Assumes projectile is facing upwards
+				if(defaultRotation) //if the minion doesn't handle rotation
+					projectile.rotation = projectile.velocity.ToRotation()+MathHelper.PiOver2; //make the sprite this rotation.
+				//IMPORTANT: Sprite must be facing UPWARDS for this to work. Else, you must write your own rotation code (and return false in hook)
 			}
 			if(DashCooldown < dashTime * 1.5f) //ensures not to reach or surpass float.maxValue
 				DashCooldown += 1f; //decrease cooldown (I know it's backwards, shut up)
 		}
 		
 		/// <summary>
-		/// Called at the beginning of AI. Use to modify the projectile's rotation.
+		/// Called before AI. Return false to handle rotation manually. Returns true by default.
 		/// </summary>
 		/// <param name="currentAI">0 = idle, 1 = found enemy, 2 = dashing</param>
-		public virtual void ModifyRotation(int currentAI) { }
+		public bool ModifyRotation(int currentAI) { return true; }
 
 		/// <summary>
 		/// Returns the location the projectile is aiming for.
