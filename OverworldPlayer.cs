@@ -10,6 +10,11 @@ namespace Overworld
 		public int[] timers = {0}; //Using this as a custom field. Will be reset on entering the world
 		public bool spikeShoot; //reset = false
 		
+		#region Minion Buffs
+		//Just put these in a region so you don't have to see the tons of minions buffs lul.
+		public bool akkhotepMinion; //reset = false
+		#endregion
+		
 		public override void OnEnterWorld(Player player)
 		{
 			for(int i = 0; i < timers.length; i++)
@@ -21,6 +26,7 @@ namespace Overworld
 		public override void ResetEffects() //Used for when buffs wear off or the player unequips an accessory.
 		{
 			spikeShoot = false; 
+			akkhotepMinion = false; //Necessary to make sure this is reset properly.
 		}
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
