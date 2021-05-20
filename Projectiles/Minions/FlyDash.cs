@@ -145,7 +145,7 @@ namespace Overworld.Projectiles.Minions
 		/// Called before AI. Return false to handle rotation manually. Returns true by default.
 		/// </summary>
 		/// <param name="currentAI">0 = idle, 1 = found enemy, 2 = dashing</param>
-		public bool ModifyRotation(int currentAI) { return true; }
+		public virtual bool ModifyRotation(int currentAI) { return true; }
 
 		/// <summary>
 		/// Returns the location the projectile is aiming for.
