@@ -32,6 +32,7 @@ namespace Overworld.Projectiles.Minions
 		#endregion
 		public override void Behavior()
 		{
+			ModifyRotation(AiState); //The way this is called ensures that it does not actually interfere with the default AI.
 			Player player = Main.player[projectile.owner]; //projectile's owner.
 			bool hasTarget = false;
 			targetPos = player.position; //Vector2 to aim for
@@ -135,5 +136,16 @@ namespace Overworld.Projectiles.Minions
 			if(DashCooldown < dashTime * 1.5f) //ensures not to reach or surpass float.maxValue
 				DashCooldown += 1f; //decrease cooldown (I know it's backwards, shut up)
 		}
+		
+		/// <summary>
+		/// Called at the beginning of AI. Use to modify the projectile's rotation.
+		/// </summary>
+		/// <param name="currentAI">0 = idle, 1 = found enemy, 2 = dashing</param>
+		public virtual void ModifyRotation(int currentAI) { }
+
+		/// <summary>
+		/// Returns the location the projectile is aiming for.
+		/// </summary>
+		public Vector2 AimedLocation { get { return targetPos; } }
 	}
 }
