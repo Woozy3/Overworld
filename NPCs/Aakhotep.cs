@@ -8,7 +8,7 @@ using Overworld.Items;
 using Overworld.Items.Weapons;
 using Overworld.Items.Armor;
 
-namespace WhisperingDeath.NPCs.Bosses
+namespace Overworld.NPCs
 {
     [AutoloadBossHead]
     public class Aakhotep : ModNPC
