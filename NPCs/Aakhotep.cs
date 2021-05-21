@@ -3,8 +3,10 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System;
-using WhisperingDeath.Projectiles.Bosses;
-using WhisperingDeath.Items.Boss;
+using Overworld.Projectiles;
+using Overworld.Items;
+using Overworld.Items.Weapons;
+using Overworld.Items.Armor;
 
 namespace WhisperingDeath.NPCs.Bosses
 {
@@ -29,51 +31,50 @@ namespace WhisperingDeath.NPCs.Bosses
 
         public override void SetDefaults()
         {
-            npc.width = 42;
-            npc.height = 84;
-            npc.damage = 12;
-            npc.defense = 9;
-            npc.lifeMax = 2000;
-            npc.boss = true;
-            npc.DeathSound = SoundID.NPCDeath34;
-            npc.value = 60f;
-            npc.knockBackResist = 0f;
-            aiType = NPCID.SandElemental;
-            npc.aiStyle = 102;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
-            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/AridSandstorm");
+            npc.width = 42; //Hitbox on the X axis
+            npc.height = 84; //Hitbox on the Y axis
+            npc.damage = 12; // B r u h
+            npc.defense = 9; // B r u h 
+            npc.lifeMax = 2000; //B r u h
+            npc.boss = true; //B r u h
+            npc.DeathSound = SoundID.NPCDeath34; //Sand Elemental Death noise
+            npc.value = 60f; //forgot what this did :keksad:
+            npc.knockBackResist = 0f; //Takes NO Knockback
+            aiType = NPCID.SandElemental; //uses the Sand Elemental's AI; npc.aiStyle is more important than this
+            npc.aiStyle = 102; //Uses the Sand Elemental's AI
+            npc.noGravity = true; //allows the NPC to float around, causing it not to flop around sadly on the ground and fall like a rock
+            npc.noTileCollide = true; //allows the NPC to go through tiles
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/AridSandstorm"); //This gets the Music from the Sounds/Music Folder
             MaxTimer = 0; // this is the starting value which is important to assign to zero for the projectile code later on
-            bossBag = ModContent.ItemType<AakhotepBag>();
+            bossBag = ModContent.ItemType<AakhotepBag>(); //Allows Boss to drop its bag in Expert Mode
         }
 
 
         public override void AI()
         {
-            Dust.NewDust(npc.position + npc.velocity, npc.width, npc.height, 32, npc.velocity.X * -0.5f, npc.velocity.Y * -0.5f);
+            Dust.NewDust(npc.position + npc.velocity, npc.width, npc.height, 32, npc.velocity.X * -0.5f, npc.velocity.Y * -0.5f); //Makes sand dust appear where he is if he is alive
 
-            if (Main.player[npc.target].ZoneDesert)
+            if (Main.player[npc.target].ZoneDesert) //checks if the player is in the desert
             {
-                npc.dontTakeDamage = false;
+                npc.dontTakeDamage = false; //makes it so he takes damage while in the desert
             }
-            else
+            else //meaning if the player is not in the desert
             {
-                npc.dontTakeDamage = true;
-                npc.damage = 60;
+                npc.dontTakeDamage = true; //takes no damage
+                npc.damage = 60; //increased damage
                 if (npc.life >= npc.lifeMax * 0.5f || Main.expertMode && npc.life >= npc.lifeMax * (0.6f)) // here to make sure that the dashes which happen while outside of the biome don't interfere with the other dashes in the code
                 {
-                    timer++;
-                    if (timer > 180) // after 120 ticks or 2 seconds
+                    timer++; //timer setup
+                    if (timer > 180) // after 180 ticks, or 3 seconds
                     {
                         timer = 0; // reset the timer
                         npc.velocity.X = Math.Sign(npc.Center.X - Main.player[npc.target].Center.X) * 26f; // make the npc X speed go to the player
-                                                                                                           // or
                         npc.velocity = npc.DirectionTo(Main.player[npc.target].Center) * 13f; // point to the player's center (X and Y)
                     }
                 }
             }
 
-            Player player = Main.player[npc.target];
+            Player player = Main.player[npc.target]; //this method here checks if the player is dead; If they are, the boss will vanish
             if (!player.active || player.dead)
             {
                 npc.TargetClosest();
@@ -124,7 +125,7 @@ namespace WhisperingDeath.NPCs.Bosses
 
 
 
-            if (!spawned && npc.life < npc.lifeMax * 0.8f)
+            if (!spawned && npc.life < npc.lifeMax * 0.8f) //spawns NPCs at 80%
             {
                 spawned = true;
                 NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.FlyingAntlion, 12, 6);
@@ -132,7 +133,7 @@ namespace WhisperingDeath.NPCs.Bosses
                 NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.Tumbleweed, 12, 6);
             }
 
-            if (!spawned3 && npc.life < npc.lifeMax * 0.4)
+            if (!spawned3 && npc.life < npc.lifeMax * 0.4) //spawns NPCs at 40%
             {
                 spawned3 = true;
                 NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.FlyingAntlion, 12, 6);
@@ -142,24 +143,21 @@ namespace WhisperingDeath.NPCs.Bosses
                 NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.Tumbleweed, 12, 6);
             }
 
-            if (Main.expertMode && npc.life < npc.lifeMax * (0.6f))
+            if (Main.expertMode && npc.life < npc.lifeMax * (0.6f)) //Enters second Phase at 60% in Expert mode (needed by the other thing above)
             {
-                timer++;
-                if (timer > 180)
+                timer++; //Timer setup
+                if (timer > 180) //180 ticks, or 3 seconds
                 {
                     timer = 0; // reset the timer
                     npc.velocity.X = Math.Sign(npc.Center.X - Main.player[npc.target].Center.X) * 16f; // make the npc X speed go to the player
-                                                                                                       // or
                     npc.velocity = npc.DirectionTo(Main.player[npc.target].Center) * 8f; // point to the player's center (X and Y)
-
-                    // do you mean to have both of these velocity changes going at the same time?
                 }
                 else
                 {
-                    aiType = NPCID.SandElemental;
+                    aiType = NPCID.SandElemental; //makes it so the boss uses Sand Elemental AI if its not spawning NPCs or Dashing
                 }
 
-                if (!spawned2 && npc.life < npc.lifeMax * 0.6f)
+                if (!spawned2 && npc.life < npc.lifeMax * 0.6f) //spawns NPCs at 60%
                 {
                     spawned2 = true;
                     NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.FlyingAntlion, 12, 6);
@@ -168,7 +166,7 @@ namespace WhisperingDeath.NPCs.Bosses
                     NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.Tumbleweed, 12, 6);
                 }
 
-                if (!spawned4 && npc.life < npc.lifeMax * 0.2 && Main.expertMode)
+                if (!spawned4 && npc.life < npc.lifeMax * 0.2 && Main.expertMode) //spawns NPCs at 20% in Expert Mode
                 {
                     spawned4 = true;
                     NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.FlyingAntlion, 12, 6);
@@ -190,11 +188,10 @@ namespace WhisperingDeath.NPCs.Bosses
                                                                                                        // or
                     npc.velocity = npc.DirectionTo(Main.player[npc.target].Center) * 6f; // point to the player's center (X and Y)
 
-                    // do you mean to have both of these velocity changes going at the same time?
                 }
                 else
                 {
-                    aiType = NPCID.SandElemental;
+                    aiType = NPCID.SandElemental; 
                 }
             }
         }
@@ -202,18 +199,27 @@ namespace WhisperingDeath.NPCs.Bosses
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.lifeMax = (int)(npc.lifeMax * 0.8f);
-            npc.damage = (int)(npc.damage * 1.8f);
+            npc.damage = (int)(npc.damage * 1.8f); //these scales the stats of the Boss while in Expert
             npc.defense = (int)(npc.defense * 1.8f);
         }
 
         public override void BossLoot(ref string name, ref int potionType)
         {
             name = "Aakhotep, The Forgotten One";
-            potionType = ItemID.HealingPotion;
+            potionType = ItemID.HealingPotion; 
+        }
+        
+        public override void PostSetupContent()
+        {
+            Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+            if(bossChecklist != null) //Boss Checklist support
+            {
+                bossChecklist.Call("AddBossWithInfo", "Aakhotep", 2.5f, (Func<bool>)(() => OverWorld.downedAakhotep), "Use a [i:" + ItemType("AncientArtifact") + "] in the Desert");
+            }
         }
 
 
-        public override void NPCLoot()
+        public override void NPCLoot() //spawns NPCs on its death, along with its loot
         {
             NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.FlyingAntlion, 12, 6);
             NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, NPCID.Tumbleweed, 12, 6);
@@ -223,7 +229,7 @@ namespace WhisperingDeath.NPCs.Bosses
 
             if (Main.rand.NextBool(10))
             {
-                //Item.NewItem(npc.getRect(), ModContent.ItemType<AakhotepTrophy>());
+                Item.NewItem(npc.getRect(), ModContent.ItemType<AakhotepTrophy>()); 
             }
             if (Main.expertMode)
             {
@@ -237,22 +243,22 @@ namespace WhisperingDeath.NPCs.Bosses
                 }
                 if (Main.rand.NextBool(4))
                 {
-                    //Item.NewItem(npc.getRect(), ModContent.ItemType<BoneSlicer>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<BoneSlicer>());
                 }
 
                 if (Main.rand.NextBool(4))
                 {
-                  //  Item.NewItem(npc.getRect(), ModContent.ItemType<uritem2>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<HieroglyphicTome>());
                 }
 
                 if (Main.rand.NextBool(4))
                 {
-                 //   Item.NewItem(npc.getRect(), ModContent.ItemType<uritem3>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<SandSplitter>());
                 }
 
                 if (Main.rand.NextBool(4))
                 {
-                //    Item.NewItem(npc.getRect(), ModContent.ItemType<uritem4>());
+                    Item.NewItem(npc.getRect(), ModContent.ItemType<ScarabSceptre>());
                 }
 
             }
